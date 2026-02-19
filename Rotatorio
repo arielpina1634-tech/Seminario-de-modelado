@@ -1,0 +1,20 @@
+function solve_disco()
+    % Parámetros
+    m = 10; r = 0.05; k = 100;
+    tspan = [0 10]; 
+    x0 = [0; 2];    
+
+    % Integración con ode45
+    [t, x] = ode45(@(t, x) disco_dynamics(t, x, m, k), tspan, x0);
+
+    % Graficar resultados
+    plot(t, x(:,1));
+    xlabel('Tiempo (s)'); ylabel('\theta (rad)');
+    title('Respuesta del Sistema (Posición Angular)'); grid on;
+end
+
+function dxdt = disco_dynamics(t, x, m, k)
+    dxdt = zeros(2,1);
+    dxdt(1) = x(2);
+    dxdt(2) = -(2*k / (3*m)) * x(1);
+end
