@@ -1,0 +1,42 @@
+clear; clc; close all;
+
+num = 2.5;
+den = [1e-8 5e-5 1];
+
+G = tf(num, den);
+
+figure
+step(G)
+grid on
+title('Respuesta al escalón - Función de transferencia')
+
+info_tf = stepinfo(G)
+
+wn = 1e4;      % frecuencia natural
+zeta = 0.25;   % factor de amortiguamiento
+K = 2.5;       % ganancia
+
+A = [0 1;
+    -wn^2 -2*zeta*wn];
+
+B = [0;
+     K*wn^2];
+
+C = [1 0];
+D = 0;
+
+sys = ss(A,B,C,D);
+
+figure
+step(sys)
+grid on
+title('Respuesta al escalón - Ecuación diferencial')
+
+info_ss = stepinfo(sys)
+
+
+figure
+step(G, sys)
+grid on
+legend('Función de transferencia','Espacio de estado')
+title('Comparación de respuestas')
