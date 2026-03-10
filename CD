@@ -1,0 +1,44 @@
+clc
+clear
+
+L = 2e-3;
+C = 10e-6;
+R = 10;
+Uin = 32;
+
+f = 100e3;
+T = 1/f;
+D = 0.4;
+
+tspan = [0 0.002];
+x0 = [0 0];
+
+opts = odeset('MaxStep',1e-7);
+[t,x] = ode45(@(t,x) buck(t,x,L,C,R,Uin,T,D), tspan, x0, opts);
+
+figure
+plot(t,x(:,1))
+title('Corriente del inductor')
+xlabel('t')
+ylabel('iL')
+
+figure
+plot(t,x(:,2))
+title('Voltaje del capacitor')
+xlabel('t')
+ylabel('Vc')
+
+function dx = buck(t,x,L,C,R,Uin,T,D)
+
+if mod(t,T) < D*T
+    d = 1;
+else
+    d = 0;
+end
+
+dx = zeros(2,1);
+
+dx(1) = -(1/L)*x(2) + (Uin/L)*d;
+dx(2) = (1/C)*x(1) - (1/(R*C))*x(2);
+
+end
